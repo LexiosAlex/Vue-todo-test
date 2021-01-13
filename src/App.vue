@@ -1,11 +1,13 @@
 <template>
   <h1>Todo application</h1>
+  <AddTodo @add-todo="addTodo" />
   <hr />
   <TodoList v-bind:todos="todosArray" @remove-todo="removeTodo" />
 </template>
 
 <script>
 import TodoList from "@/components/TodoList";
+import AddTodo from "@/components/AddTodo";
 export default {
   name: "App",
   data() {
@@ -18,11 +20,15 @@ export default {
     };
   },
   components: {
-    TodoList
+    TodoList,
+    AddTodo
   },
   methods: {
     removeTodo(id) {
       this.todosArray = this.todosArray.filter(todo => todo.id !== id);
+    },
+    addTodo(todo) {
+      this.todosArray.push(todo);
     }
   }
 };
