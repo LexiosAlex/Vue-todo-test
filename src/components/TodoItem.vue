@@ -2,7 +2,7 @@
   <li>
     <span v-bind:class="{ 'todo-done': completed }">
       <input type="checkbox" v-model="completed" />
-      <strong>{{ todo.id }}</strong>
+      <strong>{{ index + 1 }}</strong>
       {{ todo.title }}
     </span>
     <div class="todo-actions">
@@ -17,6 +17,7 @@
 <script>
 export default {
   props: {
+    index: Number,
     todo: {
       type: Object,
       required: true,
