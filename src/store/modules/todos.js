@@ -10,6 +10,12 @@ export default {
             ctx.commit("updateTodos", json);
           }, 1000);
         });
+    },
+    removeTodo(ctx, { id }) {
+      ctx.commit("removeTodo", id);
+    },
+    addTodo(ctx, { todo }) {
+      ctx.commit("addTodo", todo);
     }
   },
   mutations: {
@@ -21,18 +27,23 @@ export default {
     },
     fetchTodosSucceed(state) {
       state.loading = false;
+    },
+    removeTodo(state, id) {
+      state.todos = state.todos.filter(todo => todo.id !== id);
+    },
+    addTodo(state, todo) {
+      state.todos.push(todo);
     }
   },
   state: {
     todos: [],
-    loading: true
+    loading: false
   },
   getters: {
     getAllTodos(state) {
       return state.todos;
     },
     getIsLoading(state) {
-      console.log(state);
       return state.loading;
     }
   }
