@@ -10,7 +10,7 @@
       <option value="not-completed">Not completed</option>
     </select>
     <hr />
-    <Loader v-if="loading" />
+    <Loader v-if="getIsLoading" />
     <TodoList
       v-bind:todos="filteredTodos"
       @remove-todo="removeTodo"
@@ -24,29 +24,29 @@
 import TodoList from "@/components/TodoList";
 import AddTodo from "@/components/AddTodo";
 import Loader from "@/components/Loader";
+import { mapGetters } from "vuex";
 export default {
   name: "Todos",
   computed: {
     filteredTodos() {
       if (this.filter === "all") {
-        return this.todosArray;
+        return this.getAllTodos;
       }
 
       if (this.filter === "completed") {
-        return this.todosArray.filter(todo => todo.completed);
+        return this.getAllTodos.filter(todo => todo.completed);
       }
 
       if (this.filter === "not-completed") {
-        return this.todosArray.filter(todo => !todo.completed);
+        return this.getAllTodos.filter(todo => !todo.completed);
       }
 
-      return this.todosArray;
-    }
+      return this.getAllTodos;
+    },
+    ...mapGetters(["getAllTodos", "getIsLoading"])
   },
   data() {
     return {
-      todosArray: [],
-      loading: true,
       filter: "all"
     };
   },
@@ -56,21 +56,14 @@ export default {
     Loader
   },
   mounted() {
-    fetch("https://jsonplaceholder.typicode.com/todos?_limit=5")
-      .then(response => response.json())
-      .then(json => {
-        setTimeout(() => {
-          this.todosArray = json;
-          this.loading = false;
-        }, 1000);
-      });
+    this.$store.dispatch("fetchTodos");
   },
   methods: {
     removeTodo(id) {
-      this.todosArray = this.todosArray.filter(todo => todo.id !== id);
+      this.$store.dispatch("removeTodo", { id });
     },
     addTodo(todo) {
-      this.todosArray.push(todo);
+      this.$store.dispatch("addTodo", { todo });
     }
   }
 };
